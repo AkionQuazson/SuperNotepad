@@ -15,6 +15,17 @@ app.get('/notes/', (request, response) => {
 	// state.notes.push(request.url);
 	response.json(state.notes);
 });
+app.get('/notes/:id', (request, response) => {
+	console.log('incoming request', request.url);
+	// state.notes.push(request.url);
+	const id = parseInt(request.params.id, 10);
+	const record = state.notes[id];
+	if (record === undefined) {
+		response.status(404).json({error:'note does not exist'});
+		return;
+	}
+	response.json(record);
+});
 app.post('/notes/', (request, response) => {
 	console.log('request.body', request.body);
 	let note = request.body?.note.trim() || '';
