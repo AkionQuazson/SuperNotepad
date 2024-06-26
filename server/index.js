@@ -8,14 +8,27 @@ const port = 3000;
 app.use(express.static('./public'));
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+// for parsing application/json message bodies
+app.use(express.json());
 
-
-app.get('/notes/', (request, response) => {
+const catHeaderMiddleware = (request, response, next) => {
+	if ((request.body.note || '').toLocaleLowerCase().includes('goat')) {
+		response.status(400).json({
+			error:'goats have been banned from the server for some reason'
+		})
+		return;
+	}
+	response.set({
+		'cat-loved': true,
+	});
+	next();
+}
+app.get('/notes/', [catHeaderMiddleware], (request, response) => {
 	console.log('incoming request', request.url);
 	// state.notes.push(request.url);
 	response.json(state.notes);
 });
-app.get('/notes/:id', (request, response) => {
+app.get('/notes/:id', [catHeaderMiddleware], (request, response) => {
 	console.log('incoming request', request.url);
 	// state.notes.push(request.url);
 	const id = parseInt(request.params.id, 10);
@@ -26,7 +39,7 @@ app.get('/notes/:id', (request, response) => {
 	}
 	response.json(record);
 });
-app.post('/notes/', (request, response) => {
+app.post('/notes/', [catHeaderMiddleware], (request, response) => {//commonly abbreviated to req and res
 	console.log('request.body', request.body);
 	let note = request.body?.note.trim() || '';
 	if (!note) {

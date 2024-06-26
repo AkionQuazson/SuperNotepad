@@ -1,0 +1,15 @@
+Is the backend usable enough to finish the frontend
+	Multiple profiles?
+	AUTH //later?
+		Probably username & password, with user sessions.
+Allow notes to be edited (not bother submitting)
+Flow from note to note with arrow keys
+Redirect TAB from <next element> to <create indentation>
+	Shift+TAB <remove indentation>
+	Ctrl+left/Ctrl+right to also indent/unindent
+Minimize/open indented files
+If selected words would be replaced by {, [, (, <, ', or " instead wrap the selected words in the respective brackets or quotes.
+	If not selected, and open bracket is typed, auto close the bracket if whitespace afterwards
+Ctrl+up/Ctrl+down to move rows
+Ctrl+Shift+up/Ctrl+Shift+down to copy rows
+autocorrect? (specifically, suggesting 2-3 possible words that you might be trying to spell, that doesn't force autocomplete unless you click on it or tab to it)
