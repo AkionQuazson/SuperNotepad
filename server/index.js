@@ -21,6 +21,7 @@ app.use(session({
 }));
 app.use(passport.authenticate('session'));
 
+app.set("view engine", "ejs");
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 // for parsing application/json message bodies
@@ -42,11 +43,21 @@ const catHeaderMiddleware = (request, response, next) => {
 }
 
 const logMiddleware = (request, response, next) => {
-	console.log('what is session',request.session);
+	console.log('what is session',request.session?.passport);
 	next();
 };
 
 app.use(logMiddleware);
+
+
+app.get('/', (request, response) => {
+	const data = {
+		user: request.session?.passport?.user,
+		goatCount: Math.floor(Math.random()*1e15),
+	}
+	console.log('what is data on the homepage', data)
+	response.render('index', data)
+});
 
 app.get('/notes/', [catHeaderMiddleware], (request, response) => {
 	console.log('incoming request', request.url);

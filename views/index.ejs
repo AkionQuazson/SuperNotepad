@@ -8,6 +8,10 @@
 </head>
 <body>
 	<h1>Super Notepad: everything I wanted in a notepad</h1>
+	<% if (user) { %>
+		<h2>Welcome back, <%= user.username %></h2>
+	<% } %>
+	<h2>The current GoatCount is <%= goatCount %></h2>
 	<div>
 		<form id="new-note">
 			<div>
