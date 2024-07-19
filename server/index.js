@@ -1,15 +1,32 @@
 const express = require('express');
 const state = require('./persistence');
+const passport = require('passport');
+const authRouter = require('./auth');
+const session = require('express-session');
+
+const SQLiteStore = require('connect-sqlite3')(session);
+
 
 const app = express();
 const port = 3000;
 
 // for serving public directory at /
 app.use(express.static('./public'));
+
+app.use(session({
+	secret: 'keyboard cat',
+	resave: false,
+	saveUninitialized: false,
+	store: new SQLiteStore({ db: 'authsession.sqlite', dir: './.data/db' })
+}));
+app.use(passport.authenticate('session'));
+
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 // for parsing application/json message bodies
 app.use(express.json());
+
+app.use('/', authRouter);
 
 const catHeaderMiddleware = (request, response, next) => {
 	if ((request.body.note || '').toLocaleLowerCase().includes('goat')) {
@@ -23,6 +40,14 @@ const catHeaderMiddleware = (request, response, next) => {
 	});
 	next();
 }
+
+const logMiddleware = (request, response, next) => {
+	console.log('what is session',request.session);
+	next();
+};
+
+app.use(logMiddleware);
+
 app.get('/notes/', [catHeaderMiddleware], (request, response) => {
 	console.log('incoming request', request.url);
 	// state.notes.push(request.url);
